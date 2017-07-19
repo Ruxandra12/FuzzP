@@ -10,7 +10,7 @@ import org.junit.Test;
 public class VisitorTest {
 
   @Test
-  public void test() {
+  public void test() { //orice
     assertTrue(1 == 1);
   }
    
