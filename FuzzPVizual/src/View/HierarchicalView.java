@@ -18,6 +18,7 @@ import Model.FuzzyPVizualModel;
 import com.mxgraph.model.mxCell;
 
 public class HierarchicalView implements IView {
+    
     private FuzzyPVizualModel model;
     private IGlobalController controller;
 
@@ -57,6 +58,7 @@ public class HierarchicalView implements IView {
 
     public HierarchicalView(FuzzyPVizualModel m) {
         this.model = m;
+        
         graph = new mxGraph();
         this.cellList = new ArrayList<>();
     }
@@ -65,44 +67,54 @@ public class HierarchicalView implements IView {
         Object parent = graph.getDefaultParent();
         System.out.println("start");
         graph.getModel().beginUpdate();
+        model.getHierarchicalModel();
         try {
 
-            Object o1 = graph.insertVertex(model.getHierarchicalModel().getParent(parent), null,
-                    model.getHierarchicalModel().getCellName(1), 200, 200, 200, 200);
+            Object o1 = graph.insertVertex(parent, null,
+                    model.getHierarchicalModel().getCellName(), 200, 200, 200, 200);
 
-            Object ooo = graph.insertVertex(model.getHierarchicalModel().getParent(parent), null,
-                    model.getHierarchicalModel().getCellName(1), 200, 200, 200, 200);
-            Object oooo = graph.insertEdge(parent, null, model.getHierarchicalModel().getEdgeName(22), o1, ooo);
+            Object ooo = graph.insertVertex(parent, null,
+                    model.getHierarchicalModel().getCellName(), 200, 200, 200, 200);
+            Object oooo = graph.insertEdge(parent, null, "Edge22", o1, ooo);
+            runLayoutOrganizer(parent);
 
             graph.extendParent(o1);
 
             // need to group to make a structure
-            Object o2 = graph.insertVertex(o1, null, model.getHierarchicalModel().getCellName(2), 50, 50, 50, 50,
+            Object o2 = graph.insertVertex(o1, null, model.getHierarchicalModel().getCellName(), 50, 50, 50, 50,
                     PLACE_STYLE);
-            Object o3 = graph.insertVertex(o1, null, model.getHierarchicalModel().getCellName(3), 50, 50, 50, 50,
+            Object o3 = graph.insertVertex(o1, null, model.getHierarchicalModel().getCellName(), 50, 50, 50, 50,
                     PLACE_STYLE);
-            Object o4 = graph.insertEdge(o1, null, model.getHierarchicalModel().getEdgeName(4), o2, o3);
+            Object o4 = graph.insertEdge(o1, null, "Edge4", o2, o3);
 
             // another structure
-            Object o5 = graph.insertVertex(model.getHierarchicalModel().getParent(o1), null,
-                    model.getHierarchicalModel().getCellName(5), 30, 30, 30, 30, PLACE_STYLE);
-            Object o6 = graph.insertVertex(model.getHierarchicalModel().getParent(o1), null,
-                    model.getHierarchicalModel().getCellName(6), 30, 30, 30, 30, PLACE_STYLE);
-            Object o7 = graph.insertVertex(model.getHierarchicalModel().getParent(o1), null,
-                    model.getHierarchicalModel().getCellName(7), 30, 30, 30, 30, TRANSITION_STYLE);
-            Object o8 = graph.insertEdge(model.getHierarchicalModel().getParent(o1), null,
-                    model.getHierarchicalModel().getEdgeName(8), o5, o7);
-            Object o9 = graph.insertEdge(model.getHierarchicalModel().getParent(o1), null,
-                    model.getHierarchicalModel().getEdgeName(9), o6, o7);
-
-            mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
-            layout.setOrientation(SwingConstants.WEST);
-            layout.execute(graph.getDefaultParent());
-            layout.setMoveParent(false);
+            Object o5 = graph.insertVertex(o1, null,
+                    model.getHierarchicalModel().getCellName(), 30, 30, 30, 30, PLACE_STYLE);
+            Object o6 = graph.insertVertex(o1, null,
+                    model.getHierarchicalModel().getCellName(), 30, 30, 30, 30, PLACE_STYLE);
+            Object o7 = graph.insertVertex(o1, null,
+                    model.getHierarchicalModel().getCellName(), 30, 30, 30, 30, TRANSITION_STYLE);
+            Object o8 = graph.insertEdge(o1, null,
+                    "Edge8", o5, o7);
+            Object o9 = graph.insertEdge(o1, null,
+                    "Edge9", o6, o7);
+            
+            runLayoutOrganizer(o1);
         } finally {
             graph.getModel().endUpdate();
         }
         System.out.println("End");
+    }
+
+    private void runLayoutOrganizer(Object...objects ) {
+      mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
+      layout.setOrientation(SwingConstants.WEST);
+      layout.setMoveParent(true);
+      layout.setResizeParent(true);
+      
+      for(Object o : objects){
+        layout.execute(o);
+      }
     }
 
     public mxGraphComponent createGraphComponent() {
@@ -113,15 +125,7 @@ public class HierarchicalView implements IView {
 
     }
 
-    public void createCells(Object parent) {
-        for (int i = 0; i <= 4; i++) {
-            mxCell cell = (mxCell) graph.insertVertex(parent, Integer.toString(i),
-                    model.getHierarchicalModel().getCellName(i), 50, 50, 50, 50);
-            graph.getCellGeometry(cell).setOffset(new mxPoint(1, 2));
-            cellList.add(cell);
-        }
-    }
-
+    
     @Override
     public void reset() {
         createGraph();
@@ -133,4 +137,5 @@ public class HierarchicalView implements IView {
         this.controller = controller;
     }
 
-}
+} 
+ 

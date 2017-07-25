@@ -1,5 +1,6 @@
 package Model;
 
+import java.awt.event.HierarchyBoundsAdapter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -11,7 +12,7 @@ import PetriNetToCode.UnifiedNetMakerCodeGenerator;
 import UnifiedPLang.UnifiedPLang;
 import config.IConfigurator;
 import core.Drawable.DrawableNetWithExternalNames;
-import core.Drawable.HierarchicalModelImpl;
+import core.Drawable.HierarchicalComponent;
 import core.Drawable.TransitionPlaceNameStore;
 import core.FuzzyPetriLogic.PetriNet.FuzzyPetriNet;
 import core.FuzzyPetriLogic.PetriNet.PetriNetJsonSaver;
@@ -24,14 +25,15 @@ import core.common.recoder.FullRecorder;
 import de.erichseifert.gral.data.DataTable;
 import main.ScenarioSaverLoader;
 import structure.DrawableNet;
-import structure.IHierarchicalModel;
+import structure.IHierarchicalComponent;
+import structure.IHierarchicalComponent.Edge;
 
 public class FuzzyPVizualModel<TTokenType extends FullRecordable<TTokenType>, TTableType extends IGeneralTable, TOuTableType extends TTableType, TPetriNetType extends AbstractPetriNet<TTokenType, TTableType, TOuTableType>> {
 
     TPetriNetType net;
     FuzzyPetrinetBehaviourModel<TTokenType> behavourModel;
     DrawableNet drawableNet;
-    IHierarchicalModel hierModel;
+    IHierarchicalComponent hierModel;
     private TransitionPlaceNameStore store;
 
     IConfigurator<TTokenType, TTableType, TOuTableType, TPetriNetType> myConfig;
@@ -40,9 +42,45 @@ public class FuzzyPVizualModel<TTokenType extends FullRecordable<TTokenType>, TT
     public FuzzyPVizualModel(
             Function<TPetriNetType, IConfigurator<TTokenType, TTableType, TOuTableType, TPetriNetType>> configFactory) {
         this.configFactory = configFactory;
-        hierModel = new HierarchicalModelImpl();
+        hierModel = createMockData();
     }
-
+    
+    public static IHierarchicalComponent createMockData() {
+        HierarchicalComponent comp = new HierarchicalComponent("comp");
+        comp.addInputComp(0);
+        comp.addOutputComp(0);
+        comp.addOutputComp(1);
+        HierarchicalComponent phiComp=new HierarchicalComponent("phiComp");
+        phiComp.addInputComp(1);
+        phiComp.addInputComp(2);
+        
+        HierarchicalComponent lComp=new HierarchicalComponent("lComp");
+        HierarchicalComponent mComp=new HierarchicalComponent("mComp");
+        
+        Edge edge1=new Edge(1,"Edge1",lComp);
+        Edge edge2=new Edge(2,"Edge2",mComp);
+        phiComp.addEdge(edge1);
+        phiComp.addEdge(edge2);
+        
+        HierarchicalComponent lastComp = new HierarchicalComponent("lastComp");
+        Edge edge3=new Edge(3,"Edge3",lastComp);
+        Edge edge4=new Edge(4,"Edge4",lastComp);
+        lComp.addEdge(edge3);
+        mComp.addEdge(edge4);
+        mComp.addOutputComp(11);
+        lastComp.addOutputComp(10);
+        
+        HierarchicalComponent mainComp = new HierarchicalComponent("mainComp");
+        mainComp.addComponent(mComp);
+        mainComp.addComponent(lComp);
+        mainComp.addComponent(comp);
+        mainComp.addComponent(phiComp);
+        mainComp.addInputComp(3);
+        mainComp.addOutputComp(13);
+        mainComp.addOutputComp(14);
+        
+        return mainComp;
+    }
     public TPetriNetType getNet() {
         return net;
     }
@@ -144,11 +182,11 @@ public class FuzzyPVizualModel<TTokenType extends FullRecordable<TTokenType>, TT
         return store;
     }
 
-    public IHierarchicalModel getHierarchicalModel() {
+    public IHierarchicalComponent getHierarchicalModel() {
         return hierModel;
     }
 
-    public void setHierarchicalModel(IHierarchicalModel hm) {
+    public void setHierarchicalModel(IHierarchicalComponent hm) {
         this.hierModel = hm;
     }
 

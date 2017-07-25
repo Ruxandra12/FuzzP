@@ -64,7 +64,7 @@ public class MainView<TTokenType extends FullRecordable<TTokenType>, TTableType 
         this.controller = controller;
         mxGraphComponent graphComponent = graphView.createGraphComponent();
 
-        mxGraphComponent graphComponent2 = hierView.createGraphComponent();
+        mxGraphComponent graphComponent2 = hierView2.createGraphComponent();
 
         GridLayout ll = new GridLayout(2, 0);
         getContentPane().setLayout(ll);
@@ -77,11 +77,10 @@ public class MainView<TTokenType extends FullRecordable<TTokenType>, TTableType 
         JPanel jp2 = new JPanel();
         InteractivePanel plotViewPanel = plotView.getInteractivePanel();
         plotViewPanel.setBackground(Color.WHITE);
-        JPanel jp3 = new JPanel();
         tabbedPane.addTab("Plots", plotViewPanel);
         tabbedPane.addTab("Fuzzy Tables", jp2);
         tabbedPane.setBackground(Color.WHITE);
-        tabbedPane.addTab("Hierahical View", jp3);
+       
         TableView<TTableType> tableView = new TableView<TTableType>(model, jp2);
         controller.addView(graphView);
         controller.addView(plotView);
