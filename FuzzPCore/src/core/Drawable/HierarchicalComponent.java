@@ -49,7 +49,7 @@ public class HierarchicalComponent implements IHierarchicalComponent {
 
 
     @Override
-    public List<Edge> getEdges() {
+    public List<Edge> getChildEdges() {
         return this.edges;
     }
 

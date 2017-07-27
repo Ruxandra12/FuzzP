@@ -57,27 +57,29 @@ public class FuzzyPVizualModel<TTokenType extends FullRecordable<TTokenType>, TT
         HierarchicalComponent lComp=new HierarchicalComponent("lComp");
         HierarchicalComponent mComp=new HierarchicalComponent("mComp");
         
-        Edge edge1=new Edge(1,"Edge1",lComp);
-        Edge edge2=new Edge(2,"Edge2",mComp);
-        phiComp.addEdge(edge1);
-        phiComp.addEdge(edge2);
+        Edge edge1=new Edge(1,"Edge1",phiComp,lComp);
+        Edge edge2=new Edge(2,"Edge2",phiComp, mComp);
+        
         
         HierarchicalComponent lastComp = new HierarchicalComponent("lastComp");
-        Edge edge3=new Edge(3,"Edge3",lastComp);
-        Edge edge4=new Edge(4,"Edge4",lastComp);
-        lComp.addEdge(edge3);
-        mComp.addEdge(edge4);
+        Edge edge3=new Edge(3,"Edge3",lComp,lastComp);
+        Edge edge4=new Edge(4,"Edge4",mComp,lastComp);
         mComp.addOutputComp(11);
         lastComp.addOutputComp(10);
         
         HierarchicalComponent mainComp = new HierarchicalComponent("mainComp");
         mainComp.addComponent(mComp);
         mainComp.addComponent(lComp);
-        mainComp.addComponent(comp);
         mainComp.addComponent(phiComp);
+        mainComp.addComponent(lastComp);
+        phiComp.addComponent(comp);
         mainComp.addInputComp(3);
         mainComp.addOutputComp(13);
         mainComp.addOutputComp(14);
+        mainComp.addEdge(edge1);
+        mainComp.addEdge(edge2);
+        mainComp.addEdge(edge3);
+        mainComp.addEdge(edge4);
         
         return mainComp;
     }

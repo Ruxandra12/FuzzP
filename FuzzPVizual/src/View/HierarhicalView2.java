@@ -2,8 +2,10 @@ package View;
 
 import java.awt.event.MouseAdapter;
 
+
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,16 +38,21 @@ public class HierarhicalView2 implements IView {
     private IGlobalController controller;
     private mxGraph graph;
     private mxGraphComponent graphComponent;
+    public List<IHierarchicalComponent> components;
+    public List<IHierarchicalComponent.Edge> edges;
     
-    private HashMap<IHierarchicalComponent, mxCell> map;
-   
+    private HashMap<IHierarchicalComponent, mxCell> componentMap;
+    private HashMap<IHierarchicalComponent.Edge, mxCell> edgeMap;
+    
     FuzzyPVizualModel model;
 
     public HierarhicalView2(FuzzyPVizualModel model) {
         this.model = model;
         graph = new mxGraph();       
-        map=new HashMap<>();
-        
+        componentMap=new HashMap<>();
+        edgeMap=new HashMap<>();
+        components=model.getHierarchicalModel().getChildrenComponents();
+        edges=model.getHierarchicalModel().getChildEdges(); 
     }
 
     public void createGraph() {
@@ -56,9 +63,9 @@ public class HierarhicalView2 implements IView {
         System.out.println("Creeaza");
         try
         {   
-            createComponents(parent);
-            //func(parent);
-            runLayoutOrganizer(parent);
+            List<IHierarchicalComponent> mainComp=Arrays.asList(model.getHierarchicalModel());
+            drawCell(parent, mainComp, new ArrayList<>());
+                        
             
         } finally 
         {
@@ -74,36 +81,64 @@ public class HierarhicalView2 implements IView {
         
     }
 
+    
+    public void drawCell(Object parent, List<IHierarchicalComponent> components, List<IHierarchicalComponent.Edge> edges)
+    {
+        for(IHierarchicalComponent comp: components)
+        {
+           System.out.println("drawCell "+parent.toString()+" "+comp.getCellName());
+           mxCell componentCell=(mxCell) graph.insertVertex(parent, null, comp.getCellName(), 0, 0, PARENT_SIZE, PARENT_SIZE);
+           componentMap.put(comp, componentCell);
+                             
+                  for(int i=0;i<comp.inputComp().size();i++)
+                  { 
+                      System.out.println("drawInputComp "+comp.inputComp().get(i));
+                      mxCell cell=(mxCell) graph.insertVertex(parent, null, comp.inputComp().toString(), 0, 0, CHILDREN_SIZE, CHILDREN_SIZE);
+                      mxCell edg= (mxCell) graph.insertEdge(parent, null, "", cell, componentCell);
+                  }
+                  
+                  for(int i=0;i<comp.outputComp().size();i++)
+                  {
+                      System.out.println("drawOutputComp "+comp.outputComp().get(i));
+                      mxCell cell=(mxCell) graph.insertVertex(parent, null, comp.outputComp().toString(), 0, 0, CHILDREN_SIZE, CHILDREN_SIZE);
+                      mxCell edg= (mxCell) graph.insertEdge(parent, null, "", componentCell, cell);
+                  }  
+                 
+        }
+        
+    
+       for(IHierarchicalComponent.Edge edge:edges)
+       {  
+           System.out.println("drawEdge"+" "+edge.source.toString()+" "+edge.dest.toString());
+           mxCell edg= (mxCell) graph.insertEdge(parent, null, edge.getName(), componentMap.get(edge.source), componentMap.get(edge.dest));   
+           edgeMap.put(edge, edg);
+       }
+       
+       runLayoutOrganizer(parent);
+       
+       for(IHierarchicalComponent comp: components)
+       {
+           drawCell(componentMap.get(comp), comp.getChildrenComponents(), comp.getChildEdges());
+       }
+    }
+    
     public void createComponents(Object parent)
     {
         mxCell cell = (mxCell) graph.insertVertex(parent, null, model.getHierarchicalModel().getCellName(), 0, 0, PARENT_SIZE, PARENT_SIZE);
         for(int i=0;i<model.getHierarchicalModel().getChildrenComponents().size();i++) {
             mxCell childrenCell = (mxCell) graph.insertVertex(parent, null, model.getHierarchicalModel().getCellName(), 0, 0, CHILDREN_SIZE, CHILDREN_SIZE);
             List<IHierarchicalComponent> comp = model.getHierarchicalModel().getChildrenComponents();
-            map.put(comp.get(i), cell);
-           // createComponents(map.get(comp.get(i)).getParent());
+            componentMap.put(comp.get(i), cell);
+          
             }
         
-    }
-    
-    public void func(Object parent)
-    {
-        mxCell cell = (mxCell) graph.insertVertex(parent, null, model.getHierarchicalModel().getCellName(), 0, 0, PARENT_SIZE, PARENT_SIZE);
-        for(int i=0; i<model.getHierarchicalModel().getChildrenComponents().size()+1; i++)
-        {    
-            mxCell childrenCell = (mxCell) graph.insertVertex(parent, null, model.getHierarchicalModel().getCellName(), 0, 0, CHILDREN_SIZE, CHILDREN_SIZE);
-            List<IHierarchicalComponent> comp = model.getHierarchicalModel().getChildrenComponents();
-            map.put(comp.get(i), childrenCell);
-            mxCell edge=(mxCell) graph.insertEdge(parent,null, model.getHierarchicalModel().getEdges(),
-                  model.getHierarchicalModel().getEdges().get(i), model.getHierarchicalModel().getEdges().get(i+1));
-        }
     }
     
     public void connectInputComponents(Object parent)
     {
        for(int i=0;i<model.getHierarchicalModel().inputComp().size();i++)
        {
-           mxCell edge=(mxCell) graph.insertEdge(parent, null, "EdgeName", model.getHierarchicalModel().inputComp().get(i),map.get(parent));
+           mxCell edge=(mxCell) graph.insertEdge(parent, null, "EdgeName", model.getHierarchicalModel().inputComp().get(i),componentMap.get(parent));
        }
     }
     
@@ -111,13 +146,8 @@ public class HierarhicalView2 implements IView {
     {
        for(int i=0;i<model.getHierarchicalModel().outputComp().size();i++)
        {
-           mxCell edge=(mxCell) graph.insertEdge(parent, null, "EdgeName", model.getHierarchicalModel().outputComp().get(i), map.get(parent));
+           mxCell edge=(mxCell) graph.insertEdge(parent, null, "EdgeName", model.getHierarchicalModel().outputComp().get(i), componentMap.get(parent));
        }
-    }
-    
-    public void createEdges()
-    {
-      
     }
 
     private void runLayoutOrganizer(Object...objects ) {
