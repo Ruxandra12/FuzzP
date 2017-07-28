@@ -60,7 +60,7 @@ public class HierarchicalViewTest {
        
                
         @Test
-        public void createGraphTest() {
+        public void createGraphTest()  {
             assertTrue(1==1);
         }
         

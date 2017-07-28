@@ -39,10 +39,10 @@ public class MainView<TTokenType extends FullRecordable<TTokenType>, TTableType 
     private FuzzyPVizualModel<TTokenType, TTableType, TOuTableType, TPetriNetType> model;
     private GraphView graphView;
     private PlotView plotView;
-    private HierarchicalView hierView;
-    private HierarhicalView2 hierView2;
+    private HierarhicalView hierView;
     private IGlobalController controller;
 
+    private JTabbedPane tPane;
     private JTabbedPane tabbedPane;
     private File lastFile;
 
@@ -59,19 +59,21 @@ public class MainView<TTokenType extends FullRecordable<TTokenType>, TTableType 
         this.model = model;
         graphView = new GraphView(model);
         plotView = new PlotView(model);
-        hierView = new HierarchicalView(model);
-        hierView2 = new HierarhicalView2(model);
+        hierView = new HierarhicalView(model);
         this.controller = controller;
         mxGraphComponent graphComponent = graphView.createGraphComponent();
-
-        mxGraphComponent graphComponent2 = hierView2.createGraphComponent();
+        mxGraphComponent graphComponent2 = hierView.createGraphComponent();
 
         GridLayout ll = new GridLayout(2, 0);
         getContentPane().setLayout(ll);
-        getContentPane().add(graphComponent, 0);
-        GridLayout gl = new GridLayout(2, 2);
-        getContentPane().setLayout(gl);
-        getContentPane().add(graphComponent2, 0);
+        
+        tPane=new JTabbedPane();
+        getContentPane().add(tPane, 0);
+        tPane.addTab("NormalView", graphComponent);
+        tPane.addTab("Hierarchical View", graphComponent2);
+        tPane.setAutoscrolls(true);
+        
+        
         tabbedPane = new JTabbedPane();
         getContentPane().add(tabbedPane, 1);
         JPanel jp2 = new JPanel();

@@ -28,26 +28,35 @@ public class HierarchicalComponentTest {
        @Mock
        private FuzzyPVizualModel model;
       
-       @Before
+       @Before 
        public void setUp() {
            IHierarchicalComponent mainComp = createMockData();  
-           model.getHierarchicalModel();
+           when(model.getHierarchicalModel()).thenReturn(mainComp);
            hierComp=new HierarchicalComponent(model.getHierarchicalModel().getCellName());
            listComp=new ArrayList<>();
        }
        
        @Test
        public void addComponentTest() {
-           assertThat(0,is(listComp.size()));
-           IHierarchicalComponent c1=new HierarchicalComponent("");
-           hierComp.addComponent(c1);
-           assertThat(1,is(listComp.size()));
-         }
+//           assertThat(0,is(listComp.size()));
+//           IHierarchicalComponent c1=new HierarchicalComponent("");
+//           hierComp.addComponent(c1);
+//           assertThat(1,is(listComp.size()));
+//         }
+       assertThat(4, is(model.getHierarchicalModel().getChildrenComponents().size()));
+       IHierarchicalComponent c1=new HierarchicalComponent("");
+       hierComp.addComponent(c1);
+       assertThat(5, is(model.getHierarchicalModel().getChildrenComponents().size()));
+       }
        
        @Test
-       public void addEdgesTest() {
-          
-         }
+       public void addEdgesTest() { 
+         Edge edge=new IHierarchicalComponent.Edge(1, "", model.getHierarchicalModel().getChildrenComponents().get(1),
+                 model.getHierarchicalModel().getChildrenComponents().get(2));
+         assertThat(4, is(model.getHierarchicalModel().getChildEdges().size()));
+         hierComp.addEdge(edge);
+         assertThat(5, is(model.getHierarchicalModel().getChildEdges().size()));
+       }
        
        @Test
        public void addInputCompTest() {
