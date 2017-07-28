@@ -1,6 +1,9 @@
 package config;
 
+
+
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.spy;
 import static org.junit.Assert.*;
 
 import java.util.List;
@@ -45,7 +48,8 @@ public class HierarchicalViewTest {
         public void setUp() throws Exception {
             IHierarchicalComponent mainComp = createMockData(); 
             when(model.getHierarchicalModel()).thenReturn(mainComp);
-            
+           
+            graph=spy(new mxGraph());
             hierView=new HierarhicalView(model);
         }
         
@@ -93,11 +97,7 @@ public class HierarchicalViewTest {
            assertThat(3, is(model.getHierarchicalModel().outputComp().size()));
        }
        
-        @Test
-        public void createGraphTest()  {
-            assertTrue(1==1);
-        }
-        
+               
         public static IHierarchicalComponent createMockData() {
             HierarchicalComponent comp = new HierarchicalComponent("comp");
             comp.addInputComp(0);
