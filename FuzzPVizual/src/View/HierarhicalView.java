@@ -127,10 +127,12 @@ public class HierarhicalView implements IView {
     
     public void runLayoutOrganizer(Object...objects ) {
         mxHierarchicalLayout layout = new mxHierarchicalLayout(graph);
+        layout.setOrientation(SwingConstants.NORTH);
         layout.setOrientation(SwingConstants.WEST);
         layout.setMoveParent(true);
         layout.setResizeParent(true);
-       
+        layout.isResizeParent();
+        
         for(Object o : objects){
           layout.execute(o);
         }
@@ -144,9 +146,7 @@ public class HierarhicalView implements IView {
     @Override
     public void reset() {
         createGraph();
-       
-        
-    }
+     }
 
   
 }

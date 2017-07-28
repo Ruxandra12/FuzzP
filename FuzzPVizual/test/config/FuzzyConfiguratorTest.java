@@ -6,7 +6,7 @@ import org.junit.Test;
 
 public class FuzzyConfiguratorTest {
 
-  @Test
+  @Test 
   public void test() {
     assertTrue(1 == 1);
   }

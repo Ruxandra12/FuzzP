@@ -71,7 +71,7 @@ public class MainView<TTokenType extends FullRecordable<TTokenType>, TTableType 
         getContentPane().add(tPane, 0);
         tPane.addTab("NormalView", graphComponent);
         tPane.addTab("Hierarchical View", graphComponent2);
-        tPane.setAutoscrolls(true);
+        tPane.setAutoscrolls(false);
         
         
         tabbedPane = new JTabbedPane();
