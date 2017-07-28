@@ -57,8 +57,42 @@ public class HierarchicalViewTest {
             assertThat(2, is(model.getHierarchicalModel().outputComp().size()));
             hierView.reset();
         }
+        
+       @Test
+       public void addChildrenComponent() {
+           assertThat(4, is(model.getHierarchicalModel().getChildrenComponents().size()));
+           IHierarchicalComponent c1=new HierarchicalComponent("");
+           model.getHierarchicalModel().getChildrenComponents().add(c1);
+           assertThat(5, is(model.getHierarchicalModel().getChildrenComponents().size()));
+       }
        
-               
+       @Test
+       public void addEdgeComponent() {
+           assertThat(4, is(model.getHierarchicalModel().getChildEdges().size()));
+           Edge edge=new IHierarchicalComponent.Edge(1, "", model.getHierarchicalModel().getChildrenComponents().get(1),
+                   model.getHierarchicalModel().getChildrenComponents().get(2));
+           model.getHierarchicalModel().getChildEdges().add(edge);
+           assertThat(5, is(model.getHierarchicalModel().getChildEdges().size()));
+       }
+       
+       @Test
+       public void addInputComp() {
+           assertThat(1, is(model.getHierarchicalModel().inputComp().size()));
+           int iComp1=11;
+           int iComp2=99;
+           model.getHierarchicalModel().inputComp().add(iComp1);
+           model.getHierarchicalModel().inputComp().add(iComp2);
+           assertThat(3, is(model.getHierarchicalModel().inputComp().size()));
+       }
+        
+       @Test
+       public void addOutputComp() {
+           assertThat(2, is(model.getHierarchicalModel().outputComp().size()));
+           int oComp=33;
+           model.getHierarchicalModel().outputComp().add(oComp);
+           assertThat(3, is(model.getHierarchicalModel().outputComp().size()));
+       }
+       
         @Test
         public void createGraphTest()  {
             assertTrue(1==1);
