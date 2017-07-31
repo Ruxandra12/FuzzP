@@ -12,6 +12,8 @@ public class HierarchicalComponent implements IHierarchicalComponent {
     private List<Edge> edges;
     private List<Integer> inputComps;
     private List<Integer> outputComps;
+    private List<String>  input;
+    private List<String>  output;
     private String name;
     
     public HierarchicalComponent(String name) {
@@ -20,6 +22,8 @@ public class HierarchicalComponent implements IHierarchicalComponent {
         inputComps=new ArrayList<>();
         outputComps=new ArrayList<>();
         components=new ArrayList<>();
+        input=new ArrayList<>();
+        output=new ArrayList<>();
         this.name=name;
     }
     
@@ -40,6 +44,17 @@ public class HierarchicalComponent implements IHierarchicalComponent {
     {
         outputComps.add(outputComp);
     }
+    
+    public void addInputs(String input)
+    {
+        this.input.add(input);
+    }
+    
+    public void addOutputs(String output)
+    {
+        this.output.add(output);
+    }
+    
 
     
     @Override
