@@ -162,7 +162,7 @@ public class FuzzyPVizualModel<TTokenType extends FullRecordable<TTokenType>, TT
             setDrawableNet(new DrawableUnifiedPetriNetWithExternalNames(rezNet, lang.getNameStrore()));
             setFullRecorder(new FullRecorder<>());
             setNameStore(lang.getNameStrore());
-            HierarchicalComponent comp=lang.getHierarchicalComponent();
+            IHierarchicalComponent comp=lang.getHierarchicalComponent();
             setHierarchicalModel(comp);
         }
     }

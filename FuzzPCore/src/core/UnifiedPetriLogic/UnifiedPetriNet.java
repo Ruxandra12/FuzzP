@@ -50,7 +50,7 @@ public class UnifiedPetriNet extends AbstractPetriNet<UnifiedToken, IUnifiedTabl
     int placeId = addPlace(scale);
     isInputPlaces.set(placeId, true);
     return placeId;
-  }
+  } 
 
   public void addArcFromPlaceToTransition(int place, int transition) {
     if (fromPlaceToTrans.size() > place) {

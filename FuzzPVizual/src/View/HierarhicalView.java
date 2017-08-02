@@ -59,6 +59,7 @@ public class HierarhicalView implements IView {
 
     public void createGraph() {
         Object parent = graph.getDefaultParent();
+    
         
         graph.getModel().beginUpdate();
         model.getHierarchicalModel();
@@ -89,8 +90,9 @@ public class HierarhicalView implements IView {
         
         for(IHierarchicalComponent comp: components)
         {
-          
+     
            mxCell componentCell=(mxCell) graph.insertVertex(parent, null, comp.getCellName(), 0, 0, PARENT_SIZE, PARENT_SIZE, PARENT_STYLE);
+         
            componentMap.put(comp, componentCell);
                              
                   for(int i=0;i<comp.inputComp().size();i++)
@@ -145,7 +147,12 @@ public class HierarhicalView implements IView {
 
     @Override
     public void reset() {
-        createGraph();
+        graph.removeCells();
+        graph.removeCells(componentMap.values().toArray());
+       
+         createGraph();
+        graphComponent.refresh();
+       
      }
 
   
