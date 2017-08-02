@@ -10,8 +10,6 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observable.*;
 
-import com.sun.xml.internal.bind.CycleRecoverable.Context;
-
 import core.Drawable.HierarchicalComponent;
 import core.UnifiedPetriLogic.IUnifiedTable;
 import core.UnifiedPetriLogic.UnifiedPetriNet;

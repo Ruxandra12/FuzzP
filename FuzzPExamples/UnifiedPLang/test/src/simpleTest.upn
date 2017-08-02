@@ -1,0 +1,9 @@
+sub First {
+  iP1(0) -> oT1;
+}
+
+fOne = new First;
+fTwo = new First;
+iP0(0) -> t0 -> fOne.iP1(0) ;
+fOne.oT1 -> fTwo.iP1(0);
+fTwo.oT1 -> p0 -> ot0; 

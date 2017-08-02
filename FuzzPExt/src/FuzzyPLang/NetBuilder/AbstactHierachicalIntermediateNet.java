@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public abstract class AbstactHierachicalIntermediateNet<TTable, SELF extends AbstactHierachicalIntermediateNet<TTable, SELF>> {
   protected ArrayList<String> places;
@@ -72,6 +73,8 @@ public abstract class AbstactHierachicalIntermediateNet<TTable, SELF extends Abs
   }
 
   public void addArc(StaticScope sub, NodeRef firsNodeName, NodeRef secondNodeName) {
+      System.err.println(">>>my sub>>" + sub.subs + " "+ sub.getClass());
+      System.out.println("Add arc " + sub +" "+ firsNodeName + " "+secondNodeName);
     if (sub.current()) {
       unweigthedArc.add(new NodeRef[] { firsNodeName, secondNodeName });
     } else {
@@ -117,6 +120,7 @@ public abstract class AbstactHierachicalIntermediateNet<TTable, SELF extends Abs
   }
 
   public void makeDeclaration(StaticScope sub, String newSubName) {
+     // System.out.println("make declaration " + sub + " +++ " + newSubName);
     if (sub.current()) {
       declarations.put(newSubName, selfFactory.get());
     } else {
@@ -126,6 +130,7 @@ public abstract class AbstactHierachicalIntermediateNet<TTable, SELF extends Abs
   }
 
   public void makeInstenciation(StaticScope sub, String varName, String declaredSubName) {
+    //  System.out.println("make inst " + declaredSubName + " +++ " + varName);
     if (sub.current()) {
       instances.put(varName, declaredSubName);
     } else {
@@ -178,6 +183,20 @@ public abstract class AbstactHierachicalIntermediateNet<TTable, SELF extends Abs
 
   public Map<String, String> getInstances() {
     return instances;
+  }
+  
+  String printChr="!";
+  public void printStuff(int rec)
+  {
+      String var = IntStream.range(0, rec).mapToObj(i->printChr).collect(Collectors.joining());
+    
+      for(String i:instances.keySet()) {
+          System.out.println(var+" aici "+i+" "+instances.get(i));
+      }
+      for(String d:declarations.keySet()) {
+          System.out.println(var+"enter "+d);
+         declarations.get(d).printStuff(rec+1);;
+      }
   }
 
 }

@@ -42,7 +42,8 @@ public class FuzzyPVizualModel<TTokenType extends FullRecordable<TTokenType>, TT
     public FuzzyPVizualModel(
             Function<TPetriNetType, IConfigurator<TTokenType, TTableType, TOuTableType, TPetriNetType>> configFactory) {
         this.configFactory = configFactory;
-        hierModel = createMockData();
+      //  setHierarchicalModel(hierModel);
+        hierModel=new HierarchicalComponent("");
     }
     
     public static IHierarchicalComponent createMockData() {
@@ -161,13 +162,16 @@ public class FuzzyPVizualModel<TTokenType extends FullRecordable<TTokenType>, TT
             setDrawableNet(new DrawableUnifiedPetriNetWithExternalNames(rezNet, lang.getNameStrore()));
             setFullRecorder(new FullRecorder<>());
             setNameStore(lang.getNameStrore());
+            HierarchicalComponent comp=lang.getHierarchicalComponent();
+            setHierarchicalModel(comp);
         }
     }
 
     public void setNameStore(TransitionPlaceNameStore nameStore) {
         this.store = nameStore;
     }
-
+    
+    
     public void setNet(TPetriNetType newNet) {
         this.net = newNet;
         myConfig = configFactory.apply(newNet);
