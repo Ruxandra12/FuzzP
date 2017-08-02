@@ -58,7 +58,7 @@ public class HierarchicalComponentConverter{
     public void addSubComponent(HierarchicalComponent main, AbstactHierachicalIntermediateNet<IUnifiedTable, HiearchicalIntermediateUnifiedNet> net, DynamicScope sc)
     {   System.out.println(net);
         System.out.println(net.declarations+"   "+net.instances);
-        Map<DynamicScope,HierarchicalComponent> compMap =new HashMap<>();
+        Map<DynamicScope, HierarchicalComponent> compMap =new HashMap<>();
         for(String ff: net.instances.keySet())
         {
             HierarchicalComponent ffHier=new HierarchicalComponent(ff);
@@ -73,9 +73,12 @@ public class HierarchicalComponentConverter{
             
             boolean sourceMyChild = compMap.containsKey(arc[0].subState);
             boolean destMyChild =compMap.containsKey(arc[1].subState);
+            System.out.println(sourceMyChild);
+            System.out.println(destMyChild);
             if(sourceMyChild && destMyChild)
              {
                 main.addEdge(new IHierarchicalComponent.Edge(1, "", compMap.get(arc[0].subState), compMap.get(arc[1].subState)));    
+                System.out.println();
              }
             else if(sourceMyChild)
             {

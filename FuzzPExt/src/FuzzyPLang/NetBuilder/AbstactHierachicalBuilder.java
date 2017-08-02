@@ -1,6 +1,7 @@
 package FuzzyPLang.NetBuilder;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ public abstract class AbstactHierachicalBuilder<TTokenType, TITable extends IGen
   protected HashMap<NodeRef, Integer> trIDs;
 
   public AbstactHierachicalBuilder(TIntermediateNet interNet) {
-    this(interNet, false);
+    this(interNet, false); 
   }
 
   public AbstactHierachicalBuilder(TIntermediateNet interNet, boolean strict) {
@@ -45,6 +46,12 @@ public abstract class AbstactHierachicalBuilder<TTokenType, TITable extends IGen
     generateAllTransRefs();
     generateAllPlaceRefs();
     collectArcs();
+    for(NodeRef[]arc: unweigthedArcs)
+    {
+        System.out.println(arc[0]+" -> "+arc[1]);
+        System.out.println("NodeName: "+ arc[0].nodeName + " "+"   SubState "+ arc[0].subState);
+    }
+    
 
   }
 
@@ -461,4 +468,6 @@ public abstract class AbstactHierachicalBuilder<TTokenType, TITable extends IGen
   protected abstract void extactSpecailArcs(DynamicScope dinScope, TIntermediateNet currentNet);
 
   protected abstract void registerNormalPlace(TIntermediateNet curentInterNet, NodeRef rr, String normalPlace);
+  
+  protected abstract List<NodeRef[]> getArcs();
 }

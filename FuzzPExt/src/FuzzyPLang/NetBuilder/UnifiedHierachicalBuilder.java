@@ -1,6 +1,7 @@
 package FuzzyPLang.NetBuilder;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -120,6 +121,11 @@ public class UnifiedHierachicalBuilder extends AbstactHierachicalBuilder<Unified
 	protected void extactSpecailArcs(DynamicScope dinScope, HiearchicalIntermediateUnifiedNet currentNet) {
 	  //no scpecail arcs
 	}
+
+    @Override
+    public List<NodeRef[]> getArcs() {
+        return unweigthedArcs;
+    }
 
 
 }

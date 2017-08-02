@@ -1,10 +1,18 @@
 package FuzzyPLang.NetBuilder;
 
+import core.Drawable.HierarchicalComponent;
+import structure.IHierarchicalComponent;
+import structure.IHierarchicalComponent.Edge;
+
 public class NodeRef {
 
     String nodeName;
     DynamicScope subState;
     
+    public NodeRef()
+    {
+        
+    }
     public NodeRef(String nodeName){
     	this(nodeName, null);
     }
@@ -49,7 +57,6 @@ public class NodeRef {
     @Override
     public String toString() {
         return getDynamicScope().toString() + "." + nodeName;
-
     }
 
     @Override
@@ -58,3 +65,4 @@ public class NodeRef {
     }
 
 }
+

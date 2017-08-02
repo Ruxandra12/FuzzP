@@ -1,6 +1,6 @@
 package core.UnifiedPetriLogic;
 
-import java.util.stream.IntStream;
+import java.util.stream.IntStream; 
 import java.util.stream.Stream;
 
 import core.Drawable.TransitionPlaceNameStore;
