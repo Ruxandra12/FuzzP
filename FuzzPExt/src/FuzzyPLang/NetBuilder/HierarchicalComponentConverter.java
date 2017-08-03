@@ -31,7 +31,6 @@ public class HierarchicalComponentConverter{
        this.arcs = arcs;
     }
     
-    
     public List<String> outCompfromOutTransitions()
     {
         List<String> list=new ArrayList<>();
@@ -53,11 +52,8 @@ public class HierarchicalComponentConverter{
        return list;
     }
     
-    
-    
     public void addSubComponent(HierarchicalComponent main, AbstactHierachicalIntermediateNet<IUnifiedTable, HiearchicalIntermediateUnifiedNet> net, DynamicScope sc)
-    {   System.out.println(net);
-        System.out.println(net.declarations+"   "+net.instances);
+    {          
         Map<DynamicScope, HierarchicalComponent> compMap =new HashMap<>();
         for(String ff: net.instances.keySet())
         {
@@ -70,80 +66,49 @@ public class HierarchicalComponentConverter{
         }
         for(NodeRef[]arc:arcs)
         {
-            
             boolean sourceMyChild = compMap.containsKey(arc[0].subState);
             boolean destMyChild =compMap.containsKey(arc[1].subState);
-            System.out.println(sourceMyChild);
-            System.out.println(destMyChild);
-            if(sourceMyChild && destMyChild)
-             {
-                main.addEdge(new IHierarchicalComponent.Edge(1, "", compMap.get(arc[0].subState), compMap.get(arc[1].subState)));    
-                System.out.println();
-             }
-            else if(sourceMyChild)
+           
+            System.out.println("First Comp: "+arc[0]);
+            System.out.println("Second Comp: "+arc[1]);
+            System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+          
+           
+            if(!(arc[0].subState.equals(arc[1].subState)) && sourceMyChild && destMyChild)
             {
-               compMap.get(arc[0].subState);
-               main.addOutputs(arc[0].getNodeName());
-            }
-            else if(destMyChild)
+               main.addEdge(new Edge(1, "", compMap.get(arc[0].subState), compMap.get(arc[1].subState)));       
+            } 
+            else if(sourceMyChild && !destMyChild)
             {
-                compMap.get(arc[1].subState);
-                main.addInputs(arc[1].getNodeName());
+               compMap.get(arc[0].subState).addOutputs(arc[0].getNodeName());
+               
             }
+            else if(destMyChild && !sourceMyChild)
+            {
+                compMap.get(arc[1].subState).addInputs(arc[1].getNodeName());;
+              
+            }
+          }      
         }
-    }
     
-    public void findEdgesAndInputComps(HierarchicalComponent main)
-    {
        
-        int i=1;
-        for(NodeRef[] arc:arcs)
-        {
-            if(arc[0].subState.removeFirstSub().isEmpty() && !(arc[0].nodeName.isEmpty()) 
-                    && !(arc[1].subState.removeFirstSub().isEmpty()) && !(arc[1].nodeName.isEmpty())) 
-                {
-                main.addInputs(arc[1].getNodeName());
-                }   
-            else if(!(arc[0].subState.removeFirstSub().isEmpty()) && !(arc[0].nodeName.isEmpty()) 
-                    && arc[1].subState.removeFirstSub().isEmpty() && !(arc[1].nodeName.isEmpty())) 
-                {
-                main.addOutputs(arc[0].getNodeName());
-                }
-            else if(!(arc[0].subState.removeFirstSub().isEmpty()) && !(arc[0].nodeName.isEmpty()) 
-                    && !(arc[1].subState.removeFirstSub().isEmpty()) && !(arc[1].nodeName.isEmpty())) 
-                {
-                //main.addEdge(new Edge(1,"Edge",arc[0],arc[1]));
-                }
-        }
-        
-    }
-    
     public IHierarchicalComponent convert() {
         
         HierarchicalComponent var=new HierarchicalComponent("");
         
-        Map<DynamicScope, HierarchicalComponent> compMap=new HashMap<>();
+       
+        
         for(NodeRef[] arc:arcs)
         {
-            if(compMap.containsKey(arc[0].subState)==false && compMap.containsKey(arc[1].subState) == true )
+            if(arc[0].subState.current() && (arc[0].getNodeName().startsWith("i") || arc[0].getNodeName().startsWith("I")))
             {
-                  var.addInputs(arc[0].getNodeName()); 
+                 var.addInputs(arc[0].getNodeName()); 
             }
-            else if(compMap.containsKey(arc[0].subState)==true && compMap.containsKey(arc[1].subState) == false)
+            else if(arc[1].subState.current() && (arc[1].getNodeName().startsWith("o") || arc[1].getNodeName().startsWith("O")))
             {
                 var.addOutputs(arc[1].getNodeName());
             }
         }
-        
-        /*for(NodeRef[] arc:arcs)
-        {
-            if(arc[0].subState.removeFirstSub().isEmpty() && !(arc[1].subState.removeFirstSub().isEmpty()))
-                var.addInputs(arc[0].getNodeName());
-            else if( !(arc[0].subState.removeFirstSub().isEmpty()) && arc[1].subState.removeFirstSub().isEmpty()) {
-                var.addOutputs(arc[1].getNodeName());
-            }
-               
-        }*/
         addSubComponent(var, net, new DynamicScope());
        
         return var;

@@ -47,7 +47,8 @@ public class HierarhicalView implements IView {
     
     private HashMap<IHierarchicalComponent, mxCell> componentMap;
     private HashMap<IHierarchicalComponent.Edge, mxCell> edgeMap;
-    
+    private HashMap<String, mxCell> InpcompMap;
+    private HashMap<String, mxCell> OutcompMap;
     FuzzyPVizualModel model;
 
     public HierarhicalView(FuzzyPVizualModel model) {
@@ -55,12 +56,13 @@ public class HierarhicalView implements IView {
         graph = new mxGraph();       
         componentMap=new HashMap<>();
         edgeMap=new HashMap<>();
+        InpcompMap=new HashMap<>();
+        OutcompMap=new HashMap<>();
     }
 
     public void createGraph() {
         Object parent = graph.getDefaultParent();
     
-        
         graph.getModel().beginUpdate();
         model.getHierarchicalModel();
         System.out.println("Creeaza");
@@ -95,18 +97,20 @@ public class HierarhicalView implements IView {
          
            componentMap.put(comp, componentCell);
                              
-                  for(int i=0;i<comp.inputComp().size();i++)
+                  for(int i=0;i<comp.getInputs().size();i++)
                   { 
                      
-                      mxCell cell=(mxCell) graph.insertVertex(parent, null, comp.inputComp().toString(), 0, 0, CHILDREN_SIZE, CHILDREN_SIZE, IN_OUT_COMP);
+                      mxCell cell=(mxCell) graph.insertVertex(parent, null, comp.getInputs(), 0, 0, CHILDREN_SIZE, CHILDREN_SIZE, IN_OUT_COMP);
                       mxCell edg= (mxCell) graph.insertEdge(parent, null, "", cell, componentCell);
+                      InpcompMap.put("", cell);
                   }
                   
-                  for(int i=0;i<comp.outputComp().size();i++)
+                  for(int i=0;i<comp.getOutputs().size();i++)
                   {
                       
-                      mxCell cell=(mxCell) graph.insertVertex(parent, null, comp.outputComp().toString(), 0, 0, CHILDREN_SIZE, CHILDREN_SIZE, IN_OUT_COMP);
+                      mxCell cell=(mxCell) graph.insertVertex(parent, null, comp.getOutputs(), 0, 0, CHILDREN_SIZE, CHILDREN_SIZE, IN_OUT_COMP);
                       mxCell edg= (mxCell) graph.insertEdge(parent, null, "", componentCell, cell);
+                      OutcompMap.put("", cell);
                   }  
         }
         
@@ -149,7 +153,8 @@ public class HierarhicalView implements IView {
     public void reset() {
         graph.removeCells();
         graph.removeCells(componentMap.values().toArray());
-       
+        graph.removeCells(InpcompMap.values().toArray());
+        graph.removeCells(OutcompMap.values().toArray());
          createGraph();
         graphComponent.refresh();
        

@@ -2,7 +2,7 @@ package config;
 
 
 
-import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.mockito.Mockito.spy;
 import static org.junit.Assert.*;
 

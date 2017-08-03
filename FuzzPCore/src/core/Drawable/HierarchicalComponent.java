@@ -10,21 +10,24 @@ public class HierarchicalComponent implements IHierarchicalComponent {
     private List<IHierarchicalComponent> components;
 
     private List<Edge> edges;
-    private List<Integer> inputComps;
-    private List<Integer> outputComps;
     private List<String>  input;
     private List<String>  output;
     private String name;
     
-    public HierarchicalComponent(String name) {
+    private List<Integer>  inputComp;
+    private List<Integer>  outputComp;
+    
+    public HierarchicalComponent(String name) { 
        
         edges=new ArrayList<>();
-        inputComps=new ArrayList<>();
-        outputComps=new ArrayList<>();
         components=new ArrayList<>();
         input=new ArrayList<>();
         output=new ArrayList<>();
+       
         this.name=name;
+        
+        inputComp=new ArrayList<>();
+        outputComp=new ArrayList<>();
     }
     
     public void addComponent(IHierarchicalComponent component) {
@@ -35,15 +38,7 @@ public class HierarchicalComponent implements IHierarchicalComponent {
         edges.add(edge);
     }
     
-    public void addInputComp(int inputComp)
-    {
-        inputComps.add(inputComp);
-    }
-    
-    public void addOutputComp(int outputComp)
-    {
-        outputComps.add(outputComp);
-    }
+   
     
     public void addInputs(String input)
     {
@@ -73,15 +68,38 @@ public class HierarchicalComponent implements IHierarchicalComponent {
         return components;
     }
 
+   
+    @Override
+      public List<String> getInputs() {
+          return input;
+          
+      }
+
+      @Override
+      public List<String> getOutputs() {
+          return output;
+      }
+
     @Override
     public List<Integer> inputComp() {
-        return inputComps;
+        
+        return inputComp;
     }
 
-    
     @Override
     public List<Integer> outputComp() {
-        return outputComps;
+      
+        return outputComp;
     }
-    
+
+    public void addInputComp(int i) {
+        inputComp.add(i);
+        
+    }
+
+    public void addOutputComp(int i) {
+       outputComp.add(i);
+        
+    }
+      
 }

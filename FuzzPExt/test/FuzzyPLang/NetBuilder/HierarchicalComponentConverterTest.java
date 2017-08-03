@@ -32,7 +32,7 @@ public class HierarchicalComponentConverterTest {
         IHierarchicalComponent rez =  myConv.convert();
        
         assertThat(2, is(rez.getChildrenComponents().size()));
-        assertThat(3, is(rez.getChildEdges().size()));
+        assertThat(1, is(rez.getChildEdges().size()));
         assertThat(1, is(rez.getInputs().size()));
         assertThat(1, is(rez.getOutputs().size()));
         
