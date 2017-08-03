@@ -59,7 +59,7 @@ public class HierarchicalViewTest {
             assertThat(4, is(model.getHierarchicalModel().getChildEdges().size()));
             assertThat(1, is(model.getHierarchicalModel().inputComp().size()));
             assertThat(2, is(model.getHierarchicalModel().outputComp().size()));
-            hierView.reset();
+            //hierView.reset();
         }
         
        @Test
