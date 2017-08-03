@@ -144,4 +144,12 @@ public class FuzzyHierachicalBuilder extends
 
   }
 
+@Override
+public List<NodeRef[]> getArcs() {
+    List<NodeRef[]> toRet = new ArrayList<>();
+    toRet.addAll(unweigthedArcs);
+    toRet.addAll(weigthedArsc);
+    return toRet;
+}
+
 }
