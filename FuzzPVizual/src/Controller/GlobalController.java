@@ -25,6 +25,7 @@ public class GlobalController implements IGlobalController {
 
   @Override
   public void placeSelectionReqiest(int placeId) {
+    System.out.println("placeSelectionReqiest " +placeId );
     views.forEach(v -> v.placeSelected(placeId));
   }
 
@@ -39,18 +40,17 @@ public class GlobalController implements IGlobalController {
       views.forEach(v -> v.transitionDeselected(currentlySelectedTransition));
     }
     if (currentlySelectedTransition != trId) {
-      currentlySelectedTransition = trId;
-      views.forEach(v -> v.transitionSelected(trId));
-    }
+        currentlySelectedTransition = trId;
+        views.forEach(v -> v.transitionSelected(trId));
+      }
   }
-
+  
   @Override
   public void transitionDeselectionRequest(int trId) {
     if (currentlySelectedTransition == trId) {
-      views.forEach(v -> v.transitionDeselected(currentlySelectedTransition));
+      views.forEach(v -> v.transitionDeselected(trId));
     }
-    currentlySelectedTransition = -1;
-
+   currentlySelectedTransition = -1;
   }
 
   @Override
@@ -58,4 +58,17 @@ public class GlobalController implements IGlobalController {
     views.forEach(v -> v.reset());
   }
 
+  
+  public void tranSelectionRequest(int trId)
+  {
+      if (currentlySelectedTransition != trId) {
+          currentlySelectedTransition = trId;
+          views.forEach(v -> v.transitionSelected(trId));
+        }
+  }
+  
+  public void tranDeselectionRequest(int trId)
+  {
+      views.forEach(v -> v.transitionDeselected(trId));
+  }
 }

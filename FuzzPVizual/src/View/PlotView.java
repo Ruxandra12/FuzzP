@@ -18,6 +18,7 @@ import de.erichseifert.gral.plots.XYPlot;
 import de.erichseifert.gral.plots.lines.DefaultLineRenderer2D;
 import de.erichseifert.gral.plots.lines.LineRenderer;
 import de.erichseifert.gral.ui.InteractivePanel;
+import structure.IHierarchicalComponent;
 
 public class PlotView implements IView {
   private static final double ellipseRaduis = 2.5;
@@ -50,6 +51,8 @@ public class PlotView implements IView {
   HashMap<Integer, DataSeries> placeSeries;
   HashMap<Integer, DataSeries> inputSeries;
   HashMap<Integer, DataSeries> outSeries;
+  HashMap<Integer, DataSeries> tranSeries;
+  
   @SuppressWarnings("unused")
   private IGlobalController controller;
   private double nowMax;
@@ -60,6 +63,7 @@ public class PlotView implements IView {
     placeSeries = new HashMap<>();
     inputSeries = new HashMap<>();
     outSeries = new HashMap<>();
+    tranSeries = new HashMap<>();
     cntr = 0;
     intializeGui();
   }
@@ -97,19 +101,41 @@ public class PlotView implements IView {
 
   @Override
   public void placeSelected(int plId) {
-    System.out.println("real place id " + plId);
+   // System.out.println("real place id " + plId);
     if (placeSeries.containsKey(plId)) {
       return; // place is already plotted
     }
     String name = model.getNameStore().getPlaceName(plId);
     DataTable data = model.getDataForPlace(plId);
-    DataSeries ss = addToPlotWithName(name, data);
-
+    
+    
+    String name2=model.getHierarchicalModel().getInputs().get(plId % model.getHierarchicalModel().getInputs().size());
+    System.out.println("Input from PLot: "+name2);
+    DataSeries ss = addToPlotWithName(name2, data);
+   
     placeSeries.put(plId, ss);
-    updateYAxes(plId);
-
+    
+    updateYAxes(plId);   
   }
-
+  
+  @Override
+  public void transitionSelected(int trId)
+  {
+       //System.out.println("real OUTplace id " + trId);
+          if (tranSeries.containsKey(trId)) {
+            return; // place is already plotted
+          }
+          
+          DataTable data = model.getDataForPlace(trId);
+          String name3=model.getHierarchicalModel().getOutputs().get(trId % (model.getHierarchicalModel().getOutputs().size()));
+          
+          System.out.println("Output From Plot: "+name3);
+          
+          DataSeries ss1 = addToPlotWithName(name3, data);
+          tranSeries.put(trId, ss1);
+          
+          
+  }
   private void updateYAxes(Integer placeId) {
     double theoryMax = model.getMaxForPlace(placeId);
     double theoryMin = model.getMinForPlace(placeId);
@@ -155,7 +181,17 @@ public class PlotView implements IView {
     }
 
   }
-
+  
+  @Override 
+  public void transitionDeselected(int trId)
+  {
+      if(tranSeries.containsKey(trId))
+      {
+          plot.remove(tranSeries.get(trId));
+          interativePane.repaint();
+          tranSeries.remove(trId);
+      }
+  }
 
   @Override
   public void setController(IGlobalController controller) {

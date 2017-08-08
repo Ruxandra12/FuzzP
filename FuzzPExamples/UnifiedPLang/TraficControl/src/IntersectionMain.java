@@ -5,15 +5,19 @@ import java.util.Map;
 import java.util.Random;
 
 import Main.UnifiedVizualizer;
+import core.Drawable.HierarchicalComponent;
 import core.UnifiedPetriLogic.UnifiedToken;
 import core.UnifiedPetriLogic.executor.SyncronousUnifiedPetriExecutor;
 import core.common.recoder.FullRecorder;
 
 public class IntersectionMain {
+    
+
     public static void main(String args[]) {
         IntersectionUnifiedPetriMaker maker = new IntersectionUnifiedPetriMaker();
         SyncronousUnifiedPetriExecutor exec = new SyncronousUnifiedPetriExecutor(maker.net);
         FullRecorder<UnifiedToken> fullRec = new FullRecorder<>();
+        HierarchicalComponent hierComp = new HierarchicalComponent("");
         exec.setRecorder(fullRec);
 
         for (int i = 0; i < 20; i++) {
@@ -49,8 +53,8 @@ public class IntersectionMain {
             exec.runTick(inp);
 
         }
-        UnifiedVizualizer.visualize(maker.net, fullRec, maker.nameStore);
-
+      //UnifiedVizualizer.visualize(maker.net, fullRec, maker.nameStore);
+      UnifiedVizualizer.myVisualizer(maker.net, fullRec, maker.nameStore, hierComp);  
     }
 
     public static List<Map<Integer, UnifiedToken>> createInput() {
