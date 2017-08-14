@@ -150,7 +150,7 @@ public class UnifiedVizualizer {
   public static void main(String[] args) {
     FuzzyPVizualModel<UnifiedToken, IUnifiedTable, UnifiedOneXOneTable, UnifiedPetriNet> model = null;
     GlobalController controller;
-      model = createDefaultModel();
+    model = createDefaultModel();
 
     controller = new GlobalController(model);
     MainView<UnifiedToken, IUnifiedTable, UnifiedOneXOneTable, UnifiedPetriNet> frame = new MainView<>(model,

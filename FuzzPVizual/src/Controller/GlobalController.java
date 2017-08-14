@@ -27,11 +27,25 @@ public class GlobalController implements IGlobalController {
   public void placeSelectionReqiest(int placeId) {
     System.out.println("placeSelectionReqiest " +placeId );
     views.forEach(v -> v.placeSelected(placeId));
+    
   }
 
   @Override
+  public void placeSelectedForPlot(int placeId)
+  {
+      System.out.println("placeForPlot: "+placeId);
+      views.forEach(v -> v.placeSelectedPlot(placeId));
+  }
+  @Override
   public void placeDeselectionReqiest(int plId) {
     views.forEach(v -> v.placeDeselect(plId));
+  }
+  
+  @Override
+  public void tranSelectedForPlot(int trId)
+  {
+      System.out.println("TranForPlot: "+trId);
+      views.forEach(v -> v.tranForPlot(trId));
   }
 
   @Override
@@ -44,6 +58,7 @@ public class GlobalController implements IGlobalController {
         views.forEach(v -> v.transitionSelected(trId));
       }
   }
+  
   
   @Override
   public void transitionDeselectionRequest(int trId) {

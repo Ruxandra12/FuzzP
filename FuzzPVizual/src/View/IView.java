@@ -14,9 +14,16 @@ public interface IView {
 
   default void transitionDeselected(int currentlySelectedTransition) {
   }
+  
+  default void placeSelectedPlot(int placeId) {
+  }
 
   void reset();
 
   void setController(IGlobalController controller);
+
+  void tranForPlot(int trId);
+
+ 
 
 }

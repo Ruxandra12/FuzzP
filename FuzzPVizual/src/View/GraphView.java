@@ -208,7 +208,7 @@ public class GraphView implements IView {
     return Integer.parseInt(id.replace(transitionStarter, ""));
   }
 
-  private void publishPlaceSelection(String id, boolean selectioOrDeselect) {
+  private void publishPlaceSelection(String id, boolean selectioOrDeselect) {  //notify a selection
     int plnr = extractPlaceId(id);
     if (selectioOrDeselect) {
       controller.placeSelectionReqiest(plnr);
@@ -218,8 +218,11 @@ public class GraphView implements IView {
   }
 
   int extractPlaceId(String id) {
+      System.out.println("id " + id);
+     
     String placeIdStrater = PL_ID_PTTRN.replace(PL_NR, "");
     int plnr = Integer.parseInt(id.replace(placeIdStrater, ""));
+    System.out.println("int id " + plnr);
     return plnr;
   }
 
@@ -339,6 +342,18 @@ public class GraphView implements IView {
       return super.getToolTipForCell(obj);
     }
 
+  }
+
+  @Override
+  public void placeSelectedPlot(int placeId) {
+    
+    
+  }
+
+  @Override
+  public void tranForPlot(int trId) {
+    
+    
   }
 
 }

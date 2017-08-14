@@ -104,4 +104,16 @@ public class TableView<TTableType extends IGeneralTable> implements IView {
     transitionDeselected(-1);
   }
 
+@Override
+public void placeSelectedPlot(int placeId) {
+    // TODO Auto-generated method stub
+    
+}
+
+@Override
+public void tranForPlot(int trId) {
+    // TODO Auto-generated method stub
+    
+}
+
 }

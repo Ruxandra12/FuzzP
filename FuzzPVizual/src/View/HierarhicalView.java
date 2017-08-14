@@ -117,28 +117,27 @@ public class HierarhicalView implements IView {
 
             for (int i = 0; i < comp.getInputs().size(); i++) {
 
-                mxCell cell = (mxCell) graph.insertVertex(parent, "i" + Integer.toString(counterIn), comp.getInputs().get(i), 0,
+                mxCell cell = (mxCell) graph.insertVertex(parent, "i" + Integer.toString(counterIn)+"_"+i, comp.getInputs().get(i), 0,
                         0, CHILDREN_SIZE, CHILDREN_SIZE, IN_OUT_COMP);
                 mxCell edg = (mxCell) graph.insertEdge(parent, null, "", cell, componentCell);
                 InpcompMap.put("i" + Integer.toString(counterIn), cell);
                 counterIn++;
 
-//                System.out.println("Size of input list ! " + comp.getInputs().size());
-             //  System.out.println("Inputs: "+comp.getInputs().get(i));
-               System.out.println("InputCell id: " + cell.getId()+" Cell value: "+cell.getValue());
+                
+                 System.out.println("InputCell id: " + cell.getId()+" Cell value: "+cell.getValue()+" verify! "+comp.getInputs().get(i));
+                 
             }
 
             for (int i = 0; i < comp.getOutputs().size(); i++) {
 
-                mxCell cell = (mxCell) graph.insertVertex(parent, "o" + Integer.toString(counterOut), comp.getOutputs().get(i),
+                mxCell cell = (mxCell) graph.insertVertex(parent, "o" + Integer.toString(counterOut)+"_"+i, comp.getOutputs().get(i),
                         0, 0, CHILDREN_SIZE, CHILDREN_SIZE, IN_OUT_COMP);
                 mxCell edg = (mxCell) graph.insertEdge(parent, null, "", componentCell, cell);
                 OutcompMap.put("o" + Integer.toString(counterOut), cell);
                 counterOut++;
 
-//                 System.out.println("Size of output list ! "+comp.getOutputs().size());
-//                 System.out.println("Outputs: "+comp.getOutputs().get(i));
-                 System.out.println("OutputCell id: "+cell.getId());
+              
+                System.out.println("OutputCell id: "+cell.getId()+" Cell value: "+cell.getValue()+" verify! "+comp.getOutputs().get(i));
             }
 
         }
@@ -155,9 +154,6 @@ public class HierarhicalView implements IView {
             drawCell(componentMap.get(comp), comp.getChildrenComponents(), comp.getChildEdges(), counterIn, counterOut);
 
         }
-//        System.out.println(">>>>>>>>>>>>>" + InpcompMap);
-//        System.out.println(">>>>>>>>>>>>>" + OutcompMap);
-  
         runLayoutOrganizer(parent);
     }
 
@@ -214,26 +210,31 @@ public class HierarhicalView implements IView {
     }
 
     private void publishTransitionSelection(String id, boolean selectioOrDeselect) {
-        int trId = extratTransitionId(id);
+        int trId = extratTransitionId(id); //counter id, used to select the output components
+        int trIdPlot = extractPlotId(id);  //indice in list of outputs,  used to get the output cell name displayed in plot view bar
         if (selectioOrDeselect) {
             controller.tranSelectionRequest(trId);
+            controller.tranSelectedForPlot(trIdPlot);
         } else {
             controller.tranDeselectionRequest(trId);
+            
         }
     }
 
-    private void publishPlaceSelection(String id, boolean selectioOrDeselect) { // notify a selection
-        int plnr = extractPlaceId(id);
+    private void publishPlaceSelection(String id, boolean selectioOrDeselect) { 
+        int plnr = extractPlaceId(id);  //counter id, used to select the input components
+        int plPlotId = extractIdForPlot(id); // indice in list of inputs, used to get the input cell name displayed in plot view bar 
         if (selectioOrDeselect) {
             controller.placeSelectionReqiest(plnr);
+            controller.placeSelectedForPlot(plPlotId);
         } else {
             controller.placeDeselectionReqiest(plnr);
+           
         }
     }
 
     @Override
     public void transitionSelected(int trId) {
-        System.out.println("OutCompId: " + trId);
         OutcompMap.get("o" + Integer.toString(trId)).setStyle(PLACE_STYLE_SELECTED);
         graphComponent.refresh();
     }
@@ -246,35 +247,55 @@ public class HierarhicalView implements IView {
 
     @Override
     public void placeSelected(int plId) {
-        System.out.println("Input ID: " + plId);
-        System.out.println("-------" + InpcompMap.get("i" + Integer.toString(plId)).getId());
-        System.out.println("------->" + InpcompMap.get("i" + Integer.toString(plId)).getId().toString());
-        System.out.println("------->>" + InpcompMap.get("i" + Integer.toString(plId)).getValue());
-        System.out.println("key " + "i" + Integer.toString(plId));
-        InpcompMap.get("i" + Integer.toString(plId)).setStyle(PLACE_STYLE_SELECTED);
-       // System.out.println(InpcompMap.values());
-        graphComponent.refresh();
+//         InpcompMap.get("i" + Integer.toString(plId)).setStyle(PLACE_STYLE_SELECTED);
+//         graphComponent.refresh();
     }
-
+       
     @Override
     public void placeDeselect(int plId) {
-        System.out.println("Deselect stuff!!");
-        InpcompMap.get("i" + Integer.toString(plId)).setStyle(IN_OUT_COMP);
-        graphComponent.refresh();
+//        System.out.println("Deselect stuff!!");
+//        InpcompMap.get("i" + Integer.toString(plId)).setStyle(IN_OUT_COMP);
+//        graphComponent.refresh();
     }
 
     int extratTransitionId(String id) {
-        System.out.println("Out HERE:  " + id);
-        int outNr = Integer.parseInt(id.replace("o", ""));
-        System.out.println("OutNumber HERE:  " + outNr);
-        return outNr;
+      
+        System.out.println("Output String:  " + id);
+        String s1 = id.replace("o","");
+        int trNr = Integer.parseInt(s1.replaceAll("_[0-9]", ""));
+        System.out.println("Output Id: "+trNr);
+        return trNr;
+    }   
+    
+    int extractPlotId(String id) {
+        int trId= Integer.parseInt(id.replaceFirst("o[0-9]_",""));
+        System.out.println("OutputListIndex: "+trId);
+        return trId;
     }
-
-    int extractPlaceId(String id) {
-        System.out.println("String ID:  " + id);
-        int plnr = Integer.parseInt(id.replace("i", ""));
-        System.out.println("Int ID: " + plnr);
+    
+    int extractIdForPlot(String id)
+    {
+        
+        int plnr = Integer.parseInt(id.replaceFirst("i[0-9]_",""));
+        System.out.println("InputListIndex: "+plnr);
         return plnr;
     }
+
+    int extractPlaceId(String id) {   
+        System.out.println("String ID:  " + id);
+        String s1 = id.replace("i","");
+        int plnr = Integer.parseInt(s1.replaceAll("_[0-9]", ""));
+        System.out.println("Integer ID: " + plnr);
+        return plnr;
+    }
+
+    @Override
+    public void tranForPlot(int trId) {
+    }
+    
+    @Override
+    public void placeSelectedPlot(int placeId) { 
+    }
+ 
 
 }

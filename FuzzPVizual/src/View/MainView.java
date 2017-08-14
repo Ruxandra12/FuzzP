@@ -32,10 +32,12 @@ public class MainView<TTokenType extends FullRecordable<TTokenType>, TTableType 
     private static final long serialVersionUID = 1L;
     private static final boolean DefalutSaveOpenEnabled = false;
     private static final boolean DefailtDuzzyPLangEnabled = false;
-
+   
+    
     private boolean saveOpenEnabled;
     private boolean fuzzyPLangEnabled;
-
+    
+    
     private FuzzyPVizualModel<TTokenType, TTableType, TOuTableType, TPetriNetType> model;
     private GraphView graphView;
     private PlotView plotView;
@@ -56,6 +58,7 @@ public class MainView<TTokenType extends FullRecordable<TTokenType>, TTableType 
         super("Fuzzy Petri Visualizer");
         this.saveOpenEnabled = saveOpenEnabled;
         this.fuzzyPLangEnabled = fuzzyPLangEnabled;
+              
         this.model = model;
         graphView = new GraphView(model);
         plotView = new PlotView(model);
@@ -81,8 +84,9 @@ public class MainView<TTokenType extends FullRecordable<TTokenType>, TTableType 
         plotViewPanel.setBackground(Color.WHITE);
         tabbedPane.addTab("Plots", plotViewPanel);
         tabbedPane.addTab("Fuzzy Tables", jp2);
+        
         tabbedPane.setBackground(Color.WHITE);
-       
+     
         TableView<TTableType> tableView = new TableView<TTableType>(model, jp2);
         controller.addView(graphView);
         controller.addView(plotView);
@@ -92,14 +96,16 @@ public class MainView<TTokenType extends FullRecordable<TTokenType>, TTableType 
         plotView.setController(controller);
         hierView.setController(controller);
         tableView.setController(controller);
+       
         addMenu();
+        
     }
 
     public void addInteractivePanel(String tabName, InteractivePanel panel) {
         tabbedPane.add(tabName, panel);
 
     }
-
+    
     private void addMenu() {
         JFileChooser choose = new JFileChooser();
         JMenuBar bar = new JMenuBar();
@@ -186,11 +192,34 @@ public class MainView<TTokenType extends FullRecordable<TTokenType>, TTableType 
             fileMenu.add(saveJava);
             fileMenu.add(openFzp);
             fileMenu.add(refresh);
+            
             bar.add(fileMenu);
+            
         }
 
+            JMenu menu = new JMenu("View selected place");
+            JMenuItem viewEvent = new JMenuItem("Event");
+        
+           // viewEvent.addActionListener(ac -> plotView.showAsEvent(1));
+            
+            
+            KeyStroke keyStrokeToViewEvent = KeyStroke.getKeyStroke("shift E");
+            viewEvent.setAccelerator(keyStrokeToViewEvent);
+            
+            
+            JMenuItem viewContinous = new JMenuItem("Continous");
+            viewContinous.addActionListener( ac -> plotView.intializeGui());
+            
+            KeyStroke keyStrokeToViewContinous = KeyStroke.getKeyStroke("shift C");
+            viewContinous.setAccelerator(keyStrokeToViewContinous);
+            
+            menu.add(viewEvent);
+            menu.add(viewContinous);    
+          
+        
+        
         JMenu zoomMenu = new JMenu("Zoom");
-        bar.add(zoomMenu);
+      
         JMenuItem zoomInMenuItem = new JMenuItem("Zoom in");
         zoomInMenuItem.addActionListener(a -> graphView.zoomIn());
         KeyStroke keyStrokeToZoomIn = KeyStroke.getKeyStroke(',', java.awt.event.InputEvent.SHIFT_MASK);
@@ -203,6 +232,8 @@ public class MainView<TTokenType extends FullRecordable<TTokenType>, TTableType 
 
         zoomMenu.add(zoomInMenuItem);
         zoomMenu.add(zoomOutMenuItem);
+        bar.add(zoomMenu);
+        bar.add(menu);
     }
 
 }

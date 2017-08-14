@@ -53,7 +53,7 @@ public class IntersectionMain {
             exec.runTick(inp);
 
         }
-      //UnifiedVizualizer.visualize(maker.net, fullRec, maker.nameStore);
+      UnifiedVizualizer.visualize(maker.net, fullRec, maker.nameStore);
       UnifiedVizualizer.myVisualizer(maker.net, fullRec, maker.nameStore, hierComp);  
     }
 
